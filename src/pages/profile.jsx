@@ -4,8 +4,18 @@ import { motion } from "framer-motion";
 import { User, Mail, Phone, Wallet } from "lucide-react";
 
 export default function Profile() {
-  const { user } = useUser();
+  const { user, loading } = useUser(); // ✅ added loading from context
 
+  // ✅ Show loader while context is fetching user info
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-xl font-semibold">
+        Loading profile...
+      </div>
+    );
+  }
+
+  // ✅ Show login message if user is not logged in
   if (!user) {
     return (
       <div className="flex h-screen items-center justify-center text-xl font-semibold">
@@ -29,9 +39,7 @@ export default function Profile() {
           <div className="w-28 h-28 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
             {user.username.charAt(0).toUpperCase()}
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-gray-800">
-            {user.fullName}
-          </h1>
+          <h1 className="mt-4 text-3xl font-bold text-gray-800">{user.fullName}</h1>
           <p className="text-gray-500">@{user.username}</p>
         </div>
 

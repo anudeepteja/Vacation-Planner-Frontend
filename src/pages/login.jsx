@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
-import {useUser} from "../context/UserContext"
+import { useUser } from "../context/UserContext"
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -12,15 +12,14 @@ export default function Login() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
-const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      console.log("Login attempt:", formData);
-  
-      const response = await axios.post(
-        "http://localhost:8080/users/login",
+      console.log("HEHEHEHEHEHEHEHEHEHEHEH");
+      const { data } = await axios.post(
+        "http://localhost:8080/auth/login",
         formData, // Axios automatically stringifies JSON
         {
           headers: {
@@ -28,17 +27,27 @@ const handleSubmit = async (e) => {
           },
         }
       );
-  
-      console.log("Login success:", response.data);
-  
-      // Example: if backend returns token or userId
-      // localStorage.setItem("token", response.data.token);
-      FetchUserDetailsByUsername(formData.username);
+      console.log("HEHEHEHEHEHEHEHEHEHEHEH");
+
+      const userRes = await axios.get(`http://localhost:8080/users/username/${data.user.username}`,
+        {
+          headers: { Authorization: `Bearer ${data.accessToken}` },
+        });
+      console.log("HEHEHEHEHEHEHEHEHEHEHEH", userRes);
+
+      // Store tokens in localStorage
+      localStorage.setItem("accessToken", data.accessToken);
+      console.log("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      console.log("accessToken", data.refreshToken);
+      localStorage.setItem("username", data.user.username); // optional
+
+      // Update UserContext
+      await FetchUserDetailsByUsername(data.user.username);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Error during login:", error);
-  
-      // Axios errors may be in error.response
       if (error.response && error.response.status === 401) {
         alert("Invalid credentials, please try again!");
       } else {
@@ -46,8 +55,9 @@ const handleSubmit = async (e) => {
       }
     }
   };
-  
-  
+
+
+
 
   return (
     <div className="flex h-screen items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">

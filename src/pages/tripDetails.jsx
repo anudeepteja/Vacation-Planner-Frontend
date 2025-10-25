@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { useUser } from "../context/UserContext";
 import axios from "axios";
 import { motion } from "framer-motion";
+import api from "../api/axiosInstance"; // Axios instance
 
 export default function TripDetails() {
   const { proposalId } = useParams();
@@ -18,14 +19,14 @@ export default function TripDetails() {
   useEffect(() => {
     const fetchTripAndStatus = async () => {
       try {
-        const tripRes = await axios.get(
-          `http://localhost:8080/trip-proposals/${proposalId}`
+        const tripRes = await api.get(
+          `/trip-proposals/${proposalId}`
         );
         setTrip(tripRes.data);
 
         // fetch approval status for current user
-        const approvalRes = await axios.get(
-          `http://localhost:8080/api/proposal-approvals/${user.userId}/${proposalId}`
+        const approvalRes = await api.get(
+          `/api/proposal-approvals/${user.userId}/${proposalId}`
         );
         setStatus(approvalRes.data.status);
       } catch (err) {
@@ -40,11 +41,13 @@ export default function TripDetails() {
 
   const updateStatus = async (newStatus) => {
     try {
+      console.error("007");
       setUpdating(true);
-      await axios.put(
-        `http://localhost:8080/api/proposal-approvals/${user.userId}/${proposalId}`,
+      await api.put(
+        `/api/proposal-approvals/${user.userId}/${proposalId}`,
         { status: newStatus }
       );
+      console.error("008" , newStatus);
       setStatus(newStatus);
     } catch (err) {
       console.error("Error updating status:", err);

@@ -4,6 +4,7 @@ import { useUser } from "../context/UserContext";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { motion } from "framer-motion";
+import api from "../api/axiosInstance"; // Axios instance
 
 export default function ProposeTrip() {
   const { user, groups, FetchUserDetailsByUsername } = useUser();
@@ -39,7 +40,7 @@ export default function ProposeTrip() {
         group: { groupId: parseInt(formData.groupId) },
       };
 
-      await axios.post("http://localhost:8080/trip-proposals", payload);
+      await api.post("/trip-proposals", payload);
 
       // ✅ Refresh context so dashboard sees updated proposals
       await FetchUserDetailsByUsername(user.username);

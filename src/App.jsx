@@ -6,6 +6,7 @@ import ProposeTrip from "./pages/ProposeTrip"; // ✅ import your new page
 import Profile from "./pages/profile";
 import GroupPage from "./pages/groupPage";
 import TripDetails from "./pages/TripDetails";
+import CreateGroup from "./pages/createGroup";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/group/:groupId" element={<GroupPage />} />
         <Route path="/trip/:proposalId" element={<TripDetails />} />
+        <Route path="/create-group" element={<CreateGroup />} />
       </Routes>
     </Router>
   );

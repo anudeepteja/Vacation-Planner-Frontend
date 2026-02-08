@@ -1,14 +1,33 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
-import Navbar from "../components/Navbar"; 
+import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom"; // ✅ for navigation
+import { UserPlus } from "lucide-react";
+import AddMemberModal from "../components/AddMemberModal";
+
 
 export default function Dashboard() {
   const { user, groups, proposals, loading } = useUser();
   const [activeTab, setActiveTab] = useState("groups");
   const navigate = useNavigate(); // ✅ hook for redirect
 
+  /* State for Add Member Modal */
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const openAddMemberModal = (group) => {
+    setSelectedGroup(group);
+    setIsModalOpen(true);
+  };
+
+  const closeAddMemberModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroup(null);
+  };
+
   if (loading) {
+    // ... existing loading code
     return (
       <div className="flex h-screen items-center justify-center text-xl font-semibold">
         Loading...
@@ -62,12 +81,24 @@ export default function Dashboard() {
           {activeTab === "groups" ? (
             <>
               <h2 className="text-xl font-bold mb-4">Your Groups</h2>
+
+              {/* Create Group Button */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => navigate("/create-group")}
+                  className="px-5 py-2 bg-purple-600 text-white rounded-xl font-semibold shadow hover:bg-purple-700 transition"
+                >
+                  🚀 Create New Group
+                </button>
+              </div>
+
               {groups && groups.length > 0 ? (
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-gray-200 text-left">
                       <th className="p-3">Group Name</th>
                       <th className="p-3">Description</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -75,10 +106,22 @@ export default function Dashboard() {
                       <tr
                         key={g.groupId}
                         className="border-t cursor-pointer hover:bg-gray-100 transition"
-                        onClick={() => navigate(`/group/${g.groupId}`)} // ✅ navigate to GroupPage
+                        onClick={() => navigate(`/group/${g.groupId}`)}
                       >
                         <td className="p-3">{g.groupName}</td>
                         <td className="p-3">{g.description}</td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openAddMemberModal(g);
+                            }}
+                            className="flex items-center gap-2 px-3 py-1 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition ml-auto"
+                          >
+                            <UserPlus className="w-4 h-4" />
+                            Add Member
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -128,6 +171,16 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Add Member Modal */}
+      {selectedGroup && (
+        <AddMemberModal
+          isOpen={isModalOpen}
+          onClose={closeAddMemberModal}
+          groupId={selectedGroup.groupId}
+          groupName={selectedGroup.groupName}
+        />
+      )}
     </div>
   );
 }

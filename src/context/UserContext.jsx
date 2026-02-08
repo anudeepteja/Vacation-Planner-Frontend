@@ -17,26 +17,26 @@ export const UserProvider = ({ children }) => {
       // 1. User info
       const userRes = await api.get(`/users/username/${username}`);
       const fullUser = userRes.data;
-      console.log("fullUser", fullUser);
+      //console.log("fullUser", fullUser);
       setUser(fullUser);
 
       const userId = fullUser.userId;
 
       // 2. User groups
       const userGroupsRes = await api.get(`/api/user-groups/user/${userId}`);
-      console.log("userGroupsRes", userGroupsRes);
+      //console.log("userGroupsRes", userGroupsRes);
       const groupIds = userGroupsRes.data.map((ug) => ug.group.groupId);
 
       // Fetch all groups in parallel
       const groupsData = await Promise.all(
         groupIds.map((id) => api.get(`/api/groups/${id}`).then((r) => r.data))
       );
-      console.log("groupsData", groupsData);
+      //console.log("groupsData", groupsData);
       setGroups(groupsData);
 
       // 3. User proposals
       const proposalsRes = await api.get(`/trip-proposals/user/${userId}`);
-      console.log("proposalsRes", proposalsRes);
+      //console.log("proposalsRes", proposalsRes);
       setProposals(proposalsRes.data);
     } catch (err) {
       console.error("Failed to fetch user details:", err);

@@ -17,7 +17,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      console.log("HEHEHEHEHEHEHEHEHEHEHEH");
+      //console.log("HEHEHEHEHEHEHEHEHEHEHEH");
       const { data } = await axios.post(
         "http://localhost:8080/auth/login",
         formData, // Axios automatically stringifies JSON
@@ -27,19 +27,19 @@ export default function Login() {
           },
         }
       );
-      console.log("HEHEHEHEHEHEHEHEHEHEHEH");
+      //console.log("HEHEHEHEHEHEHEHEHEHEHEH");
 
       const userRes = await axios.get(`http://localhost:8080/users/username/${data.user.username}`,
         {
           headers: { Authorization: `Bearer ${data.accessToken}` },
         });
-      console.log("HEHEHEHEHEHEHEHEHEHEHEH", userRes);
+      //console.log("HEHEHEHEHEHEHEHEHEHEHEH", userRes);
 
       // Store tokens in localStorage
       localStorage.setItem("accessToken", data.accessToken);
-      console.log("accessToken", data.accessToken);
+      //console.log("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
-      console.log("accessToken", data.refreshToken);
+      //console.log("accessToken", data.refreshToken);
       localStorage.setItem("username", data.user.username); // optional
 
       // Update UserContext

@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { Bell } from "lucide-react";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Navbar() {
     } else {
       navigate("/dashboard");
     }*/
-   navigate("/dashboard");
+    navigate("/dashboard");
   };
 
   return (
@@ -33,6 +34,14 @@ export default function Navbar() {
 
       {/* Right side */}
       <div className="flex items-center space-x-6">
+        {/* Notification Icon */}
+        <div className="relative cursor-pointer hover:text-indigo-600 transition">
+          <Bell className="w-6 h-6 text-gray-700" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            3
+          </span>
+        </div>
+
         {user && (
           <span
             className="text-gray-700 font-medium cursor-pointer hover:text-indigo-600 transition"

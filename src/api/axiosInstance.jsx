@@ -7,6 +7,7 @@ const api = axios.create({
 // Attach access token to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
+  console.log("Bearer", token);
   if (token) config.headers["Authorization"] = `Bearer ${token}`;
   return config;
 });
@@ -22,7 +23,7 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        console.log("refreshToken tada", refreshToken);
+        console.log("REFRESH Token", refreshToken);
         const res = await axios.post("http://localhost:8080/auth/refresh", { refreshToken });
         const newAccessToken = res.data.accessToken;
         localStorage.setItem("accessToken", newAccessToken);
